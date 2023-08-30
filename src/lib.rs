@@ -183,10 +183,12 @@ where
     pub fn generate_from_tokens(&self, tokens: Vec<T>) -> Vec<T> {
         let mut curs = vec![None; self.order - 1];
         for token in &tokens {
-            if self.map.contains_key(token) == false { return Vec::new(); }
             curs.push(Some(token.clone()));
         }
         curs = curs[1..self.order].to_vec();
+        if !self.map.contains_key(&curs) {
+            return Vec::new();
+        }
         let mut ret = tokens.clone();
         loop {
             let next = self.map[&curs].next();
