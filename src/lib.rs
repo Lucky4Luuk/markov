@@ -179,6 +179,30 @@ where
         ret
     }
 
+    /// Generates a collection of tokens from the chain, starting with the given tokens.
+    pub fn generate_from_tokens(&self, tokens: Vec<T>) -> Vec<T> {
+        let mut curs = vec![None; self.order - 1];
+        for token in tokens {
+            curs.push(Some(token.clone()));
+        }
+        if !self.map.contains_key(&curs) {
+            return Vec::new();
+        }
+        let mut ret = vec![token];
+        loop {
+            let next = self.map[&curs].next();
+            curs = curs[1..self.order].to_vec();
+            curs.push(next.clone());
+            if let Some(next) = next {
+                ret.push(next)
+            };
+            if curs[self.order - 1].is_none() {
+                break;
+            }
+        }
+        ret
+    }
+
     /// Merges 2 chains (self and other) into self, consuming the other one. Both chains must be of
     /// the same order. This method is useful when you want to speed up chain building - chains
     /// built independently (e.g. in parallel with rayon) can be merged into a final one.
