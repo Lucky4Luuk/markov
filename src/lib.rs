@@ -359,7 +359,7 @@ impl Chain<String> {
     /// Generates a random string of text starting with the desired tokens. This returns an empty
     /// string if the tokens are not found.
     pub fn generate_str_from_tokens(&self, string: &str) -> String {
-        Chain::vec_to_string(self.generate_from_tokens(string.split_whitespace().collect::<Vec<String>>()))
+        Chain::vec_to_string(self.generate_from_tokens(string.split_whitespace().map(|s| s.to_owned()).collect::<Vec<String>>()))
     }
 
     /// Produces an infinite iterator of generated strings.
