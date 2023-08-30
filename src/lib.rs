@@ -182,13 +182,13 @@ where
     /// Generates a collection of tokens from the chain, starting with the given tokens.
     pub fn generate_from_tokens(&self, tokens: Vec<T>) -> Vec<T> {
         let mut curs = vec![None; self.order - 1];
-        for token in tokens {
+        for token in &tokens {
             curs.push(Some(token.clone()));
         }
         if !self.map.contains_key(&curs) {
             return Vec::new();
         }
-        let mut ret = vec![token];
+        let mut ret = tokens.clone();
         loop {
             let next = self.map[&curs].next();
             curs = curs[1..self.order].to_vec();
@@ -354,6 +354,12 @@ impl Chain<String> {
     /// string if the token is not found.
     pub fn generate_str_from_token(&self, string: &str) -> String {
         Chain::vec_to_string(self.generate_from_token(string.to_owned()))
+    }
+
+    /// Generates a random string of text starting with the desired tokens. This returns an empty
+    /// string if the tokens are not found.
+    pub fn generate_str_from_tokens(&self, string: &str) -> String {
+        Chain::vec_to_string(self.generate_from_tokens(string.split_whitespace().to_owned()))
     }
 
     /// Produces an infinite iterator of generated strings.
