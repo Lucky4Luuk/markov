@@ -185,9 +185,6 @@ where
         for token in &tokens {
             curs.push(Some(token.clone()));
         }
-        if !self.map.contains_key(&curs) {
-            return Vec::new();
-        }
         let mut ret = tokens.clone();
         loop {
             let next = self.map[&curs].next();
